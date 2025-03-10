@@ -98,26 +98,42 @@ class CalculatorModel {
     }
     _operator = operator;
     _firstOperand = _display;
-    _history =
-        operator == '^' ? '$_firstOperand^' : '$_firstOperand $_operator';
+    switch (operator) {
+      case '^':
+        _history = '${_formatNumber(_firstOperand)}^{?}';
+        break;
+      case '×':
+        _history = '${_formatNumber(_firstOperand)} \\times';
+        break;
+      case '÷':
+        _history = '${_formatNumber(_firstOperand)} \\div';
+        break;
+      default:
+        _history = '${_formatNumber(_firstOperand)} $operator';
+    }
     _shouldResetDisplay = true;
   }
 
   void calculateResult() {
     if (_firstOperand.isNotEmpty && _operator.isNotEmpty) {
-      _history = '$_firstOperand $_operator $_display =';
+      String operator = _operator == '^'
+          ? '^{${_display}}'
+          : _operator == '×'
+              ? '\\times'
+              : _operator == '÷'
+                  ? '\\div'
+                  : _operator;
+      _history =
+          '${_formatNumber(_firstOperand)} $operator ${_formatNumber(_display)} =';
       _performOperation();
     }
   }
 
   void calculateSquare() {
     double number = double.parse(_display);
-    _history = 'sqr($_display)';
+    _history = '${_formatNumber(_display)}^2';
     double result = number * number;
-    _display = result.toString();
-    if (_display.endsWith('.0')) {
-      _display = _display.substring(0, _display.length - 2);
-    }
+    _display = _formatResult(result);
   }
 
   void calculateSquareRoot() {
@@ -127,12 +143,9 @@ class CalculatorModel {
       _history = '';
       return;
     }
-    _history = '√($_display)';
+    _history = '\\sqrt{${_formatNumber(_display)}}';
     double result = math.sqrt(number);
-    _display = result.toString();
-    if (_display.endsWith('.0')) {
-      _display = _display.substring(0, _display.length - 2);
-    }
+    _display = _formatResult(result);
   }
 
   void calculateReciprocal() {
@@ -142,17 +155,14 @@ class CalculatorModel {
       _history = '';
       return;
     }
-    _history = '1/($_display)';
+    _history = '\\frac{1}{${_formatNumber(_display)}}';
     double result = 1 / number;
-    _display = result.toString();
-    if (_display.endsWith('.0')) {
-      _display = _display.substring(0, _display.length - 2);
-    }
+    _display = _formatResult(result);
   }
 
   void calculateSin() {
     double number = double.parse(_display);
-    _history = 'sin($_display)';
+    _history = '\\sin(${_formatNumber(_display)})';
     double result =
         math.sin(_isInRadianMode ? number : _degreesToRadians(number));
     _display = _formatResult(result);
@@ -160,7 +170,7 @@ class CalculatorModel {
 
   void calculateCos() {
     double number = double.parse(_display);
-    _history = 'cos($_display)';
+    _history = '\\cos(${_formatNumber(_display)})';
     double result =
         math.cos(_isInRadianMode ? number : _degreesToRadians(number));
     _display = _formatResult(result);
@@ -168,7 +178,7 @@ class CalculatorModel {
 
   void calculateTan() {
     double number = double.parse(_display);
-    _history = 'tan($_display)';
+    _history = '\\tan(${_formatNumber(_display)})';
     double angleInRadians =
         _isInRadianMode ? number : _degreesToRadians(number);
     if ((angleInRadians - math.pi / 2).abs() % math.pi < 1e-10) {
@@ -185,7 +195,7 @@ class CalculatorModel {
       _display = '错误';
       return;
     }
-    _history = 'arcsin($_display)';
+    _history = '\\arcsin(${_formatNumber(_display)})';
     double result = math.asin(number);
     if (!_isInRadianMode) {
       result = _radiansToDegrees(result);
@@ -199,7 +209,7 @@ class CalculatorModel {
       _display = '错误';
       return;
     }
-    _history = 'arccos($_display)';
+    _history = '\\arccos(${_formatNumber(_display)})';
     double result = math.acos(number);
     if (!_isInRadianMode) {
       result = _radiansToDegrees(result);
@@ -209,7 +219,7 @@ class CalculatorModel {
 
   void calculateAtan() {
     double number = double.parse(_display);
-    _history = 'arctan($_display)';
+    _history = '\\arctan(${_formatNumber(_display)})';
     double result = math.atan(number);
     if (!_isInRadianMode) {
       result = _radiansToDegrees(result);
@@ -223,7 +233,7 @@ class CalculatorModel {
       _display = '错误';
       return;
     }
-    _history = 'log($_display)';
+    _history = '\\log(${_formatNumber(_display)})';
     double result = math.log(number) / math.ln10;
     _display = _formatResult(result);
   }
@@ -234,14 +244,14 @@ class CalculatorModel {
       _display = '错误';
       return;
     }
-    _history = 'ln($_display)';
+    _history = '\\ln(${_formatNumber(_display)})';
     double result = math.log(number);
     _display = _formatResult(result);
   }
 
   void calculateExp() {
     double number = double.parse(_display);
-    _history = 'e^($_display)';
+    _history = 'e^{${_formatNumber(_display)}}';
     double result = math.exp(number);
     _display = _formatResult(result);
   }
@@ -252,14 +262,14 @@ class CalculatorModel {
       _display = '错误';
       return;
     }
-    _history = '$_display!';
+    _history = '${_formatNumber(_display)}!';
     double result = _factorial(number);
     _display = _formatResult(result);
   }
 
   void calculatePercent() {
     double number = double.parse(_display);
-    _history = '$_display%';
+    _history = '${_formatNumber(_display)}\\%';
     double result = number / 100;
     _display = _formatResult(result);
   }
@@ -297,5 +307,12 @@ class CalculatorModel {
       return result.toStringAsExponential(10);
     }
     return stringResult;
+  }
+
+  String _formatNumber(String number) {
+    if (number.startsWith('-')) {
+      return '(' + number + ')';
+    }
+    return number;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
 import '../../models/calculator_model.dart';
 
 class ScientificCalculator extends StatefulWidget {
@@ -19,6 +20,39 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
     int flex = 1,
     VoidCallback? onPressed,
   }) {
+    Widget buttonText;
+    if (text.startsWith('\\') || text.contains('^') || text.contains('_')) {
+      buttonText = FittedBox(
+        fit: BoxFit.scaleDown,
+        child: DefaultTextStyle(
+          style: TextStyle(color: Colors.white),
+          child: Math.tex(
+            text,
+            textStyle: TextStyle(
+              fontSize: fontSize,
+              color: Colors.white,
+            ),
+            options: MathOptions(
+              style: MathStyle.text,
+              fontSize: fontSize,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      );
+    } else {
+      buttonText = FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: fontSize,
+            color: textColor,
+          ),
+        ),
+      );
+    }
+
     return Expanded(
       flex: flex,
       child: Padding(
@@ -27,16 +61,16 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
           style: ElevatedButton.styleFrom(
             backgroundColor: color,
             foregroundColor: textColor,
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: 16,
+            ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
           ),
           onPressed: onPressed,
-          child: Text(
-            text,
-            style: TextStyle(fontSize: fontSize),
-          ),
+          child: Center(child: buttonText),
         ),
       ),
     );
@@ -70,23 +104,36 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
                         style: const TextStyle(fontSize: 16),
                       ),
                     ),
-                    Text(
-                      _calculator.history,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey,
+                    if (_calculator.history.isNotEmpty)
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Math.tex(
+                            _calculator.history,
+                            textStyle: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.grey,
+                            ),
+                            options: MathOptions(
+                              style: MathStyle.display,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Text(
-                  _calculator.display,
-                  style: const TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    _calculator.display,
+                    style: const TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -102,19 +149,19 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
                 child: Row(
                   children: [
                     _buildButton(
-                      'sin',
+                      '\\sin',
                       color: Colors.blue[700]!,
                       onPressed: () =>
                           setState(() => _calculator.calculateSin()),
                     ),
                     _buildButton(
-                      'cos',
+                      '\\cos',
                       color: Colors.blue[700]!,
                       onPressed: () =>
                           setState(() => _calculator.calculateCos()),
                     ),
                     _buildButton(
-                      'tan',
+                      '\\tan',
                       color: Colors.blue[700]!,
                       onPressed: () =>
                           setState(() => _calculator.calculateTan()),
@@ -136,19 +183,19 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
                 child: Row(
                   children: [
                     _buildButton(
-                      'asin',
+                      '\\arcsin',
                       color: Colors.blue[700]!,
                       onPressed: () =>
                           setState(() => _calculator.calculateAsin()),
                     ),
                     _buildButton(
-                      'acos',
+                      '\\arccos',
                       color: Colors.blue[700]!,
                       onPressed: () =>
                           setState(() => _calculator.calculateAcos()),
                     ),
                     _buildButton(
-                      'atan',
+                      '\\arctan',
                       color: Colors.blue[700]!,
                       onPressed: () =>
                           setState(() => _calculator.calculateAtan()),
@@ -170,13 +217,13 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
                 child: Row(
                   children: [
                     _buildButton(
-                      'log',
+                      '\\log',
                       color: Colors.blue[700]!,
                       onPressed: () =>
                           setState(() => _calculator.calculateLog()),
                     ),
                     _buildButton(
-                      'ln',
+                      '\\ln',
                       color: Colors.blue[700]!,
                       onPressed: () =>
                           setState(() => _calculator.calculateLn()),
@@ -188,13 +235,13 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
                           setState(() => _calculator.calculateExp()),
                     ),
                     _buildButton(
-                      'x²',
+                      'x^2',
                       color: Colors.blue[700]!,
                       onPressed: () =>
                           setState(() => _calculator.calculateSquare()),
                     ),
                     _buildButton(
-                      '√',
+                      '\\sqrt{x}',
                       color: Colors.blue[700]!,
                       onPressed: () =>
                           setState(() => _calculator.calculateSquareRoot()),
@@ -221,7 +268,7 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
                           setState(() => _calculator.addDigit('9')),
                     ),
                     _buildButton(
-                      '%',
+                      '\\%',
                       color: Colors.blue[700]!,
                       onPressed: () =>
                           setState(() => _calculator.calculatePercent()),
@@ -254,7 +301,7 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
                           setState(() => _calculator.addDigit('6')),
                     ),
                     _buildButton(
-                      'x!',
+                      'n!',
                       color: Colors.blue[700]!,
                       onPressed: () =>
                           setState(() => _calculator.calculateFactorial()),
