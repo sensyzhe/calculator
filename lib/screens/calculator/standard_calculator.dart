@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
 import '../../models/calculator_model.dart';
 
 class StandardCalculator extends StatefulWidget {
@@ -19,6 +20,42 @@ class _StandardCalculatorState extends State<StandardCalculator> {
     int flex = 1,
     VoidCallback? onPressed,
   }) {
+    Widget buttonText;
+    if (text.startsWith('\\') ||
+        text.contains('^') ||
+        text.contains('/') ||
+        text == '√') {
+      buttonText = FittedBox(
+        fit: BoxFit.scaleDown,
+        child: DefaultTextStyle(
+          style: TextStyle(color: textColor),
+          child: Math.tex(
+            text,
+            textStyle: TextStyle(
+              fontSize: fontSize,
+              color: textColor,
+            ),
+            options: MathOptions(
+              style: MathStyle.text,
+              fontSize: fontSize,
+              color: textColor,
+            ),
+          ),
+        ),
+      );
+    } else {
+      buttonText = FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: fontSize,
+            color: textColor,
+          ),
+        ),
+      );
+    }
+
     return Expanded(
       flex: flex,
       child: Padding(
@@ -33,10 +70,7 @@ class _StandardCalculatorState extends State<StandardCalculator> {
             ),
           ),
           onPressed: onPressed,
-          child: Text(
-            text,
-            style: TextStyle(fontSize: fontSize),
-          ),
+          child: Center(child: buttonText),
         ),
       ),
     );
@@ -56,13 +90,26 @@ class _StandardCalculatorState extends State<StandardCalculator> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Text(
-                  _calculator.history,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    color: Colors.grey,
-                  ),
-                ),
+                child: _calculator.history.isNotEmpty
+                    ? FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: DefaultTextStyle(
+                          style: const TextStyle(color: Colors.grey),
+                          child: Math.tex(
+                            _calculator.history,
+                            textStyle: const TextStyle(
+                              fontSize: 24,
+                              color: Colors.grey,
+                            ),
+                            options: MathOptions(
+                              style: MathStyle.text,
+                              fontSize: 24,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      )
+                    : const SizedBox(height: 24),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
@@ -96,13 +143,13 @@ class _StandardCalculatorState extends State<StandardCalculator> {
                       onPressed: () => setState(() => _calculator.backspace()),
                     ),
                     _buildButton(
-                      '1/x',
+                      '\\frac{1}{x}',
                       color: Colors.blue[700]!,
                       onPressed: () =>
                           setState(() => _calculator.calculateReciprocal()),
                     ),
                     _buildButton(
-                      'x²',
+                      'x^2',
                       color: Colors.blue[700]!,
                       onPressed: () =>
                           setState(() => _calculator.calculateSquare()),
@@ -221,7 +268,7 @@ class _StandardCalculatorState extends State<StandardCalculator> {
                 child: Row(
                   children: [
                     _buildButton(
-                      '√',
+                      '\\sqrt{x}',
                       color: Colors.blue[700]!,
                       onPressed: () =>
                           setState(() => _calculator.calculateSquareRoot()),

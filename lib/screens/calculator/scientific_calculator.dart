@@ -11,6 +11,7 @@ class ScientificCalculator extends StatefulWidget {
 
 class _ScientificCalculatorState extends State<ScientificCalculator> {
   final CalculatorModel _calculator = CalculatorModel();
+  bool _showSecondPage = false;
 
   Widget _buildButton(
     String text, {
@@ -76,6 +77,204 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
     );
   }
 
+  List<Widget> _buildFirstPageButtons() {
+    return [
+      Expanded(
+        child: Row(
+          children: [
+            _buildButton(
+              '\\sin',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.calculateSin()),
+            ),
+            _buildButton(
+              '\\cos',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.calculateCos()),
+            ),
+            _buildButton(
+              '\\tan',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.calculateTan()),
+            ),
+            _buildButton(
+              'C',
+              color: Colors.red[700]!,
+              onPressed: () => setState(() => _calculator.clear()),
+            ),
+            _buildButton(
+              '⌫',
+              color: Colors.orange[700]!,
+              onPressed: () => setState(() => _calculator.backspace()),
+            ),
+          ],
+        ),
+      ),
+      Expanded(
+        child: Row(
+          children: [
+            _buildButton(
+              '\\arcsin',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.calculateAsin()),
+            ),
+            _buildButton(
+              '\\arccos',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.calculateAcos()),
+            ),
+            _buildButton(
+              '\\arctan',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.calculateAtan()),
+            ),
+            _buildButton(
+              '(',
+              color: Colors.grey[700]!,
+              onPressed: () {},
+            ),
+            _buildButton(
+              ')',
+              color: Colors.grey[700]!,
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ),
+      Expanded(
+        child: Row(
+          children: [
+            _buildButton(
+              '\\ln',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.calculateLn()),
+            ),
+            _buildButton(
+              'e^x',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.calculateExp()),
+            ),
+            _buildButton(
+              'x^2',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.calculateSquare()),
+            ),
+            _buildButton(
+              '\\sqrt{x}',
+              color: Colors.blue[700]!,
+              onPressed: () =>
+                  setState(() => _calculator.calculateSquareRoot()),
+            ),
+            _buildButton(
+              'n!',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.calculateFactorial()),
+            ),
+          ],
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> _buildSecondPageButtons() {
+    return [
+      Expanded(
+        child: Row(
+          children: [
+            _buildButton(
+              '\\pi',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.addPi()),
+            ),
+            _buildButton(
+              'e',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.addE()),
+            ),
+            _buildButton(
+              '|x|',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.calculateAbs()),
+            ),
+            _buildButton(
+              'C',
+              color: Colors.red[700]!,
+              onPressed: () => setState(() => _calculator.clear()),
+            ),
+            _buildButton(
+              '⌫',
+              color: Colors.orange[700]!,
+              onPressed: () => setState(() => _calculator.backspace()),
+            ),
+          ],
+        ),
+      ),
+      Expanded(
+        child: Row(
+          children: [
+            _buildButton(
+              '\\log',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.calculateLog()),
+            ),
+            _buildButton(
+              '\\log_x(y)',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.setOperator('log')),
+            ),
+            _buildButton(
+              '\\bmod',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.setOperator('mod')),
+            ),
+            _buildButton(
+              '(',
+              color: Colors.grey[700]!,
+              onPressed: () {},
+            ),
+            _buildButton(
+              ')',
+              color: Colors.grey[700]!,
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ),
+      Expanded(
+        child: Row(
+          children: [
+            _buildButton(
+              'x^3',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.calculateCube()),
+            ),
+            _buildButton(
+              '\\sqrt[3]{x}',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.calculateCubeRoot()),
+            ),
+            _buildButton(
+              'x^y',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.setOperator('^')),
+            ),
+            _buildButton(
+              '\\%',
+              color: Colors.blue[700]!,
+              onPressed: () => setState(() => _calculator.calculatePercent()),
+            ),
+            _buildButton(
+              '\\frac{1}{x}',
+              color: Colors.blue[700]!,
+              onPressed: () =>
+                  setState(() => _calculator.calculateReciprocal()),
+            ),
+          ],
+        ),
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -93,30 +292,49 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _calculator.toggleAngleMode();
-                        });
-                      },
-                      child: Text(
-                        _calculator.isInRadianMode ? 'RAD' : 'DEG',
-                        style: const TextStyle(fontSize: 16),
-                      ),
+                    Row(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              _calculator.toggleAngleMode();
+                            });
+                          },
+                          child: Text(
+                            _calculator.isInRadianMode ? 'RAD' : 'DEG',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              _showSecondPage = !_showSecondPage;
+                            });
+                          },
+                          child: Text(
+                            _showSecondPage ? '1/2' : '2/2',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ],
                     ),
                     if (_calculator.history.isNotEmpty)
                       Flexible(
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
-                          child: Math.tex(
-                            _calculator.history,
-                            textStyle: const TextStyle(
-                              fontSize: 20,
-                              color: Colors.grey,
-                            ),
-                            options: MathOptions(
-                              style: MathStyle.display,
-                              fontSize: 20,
+                          child: DefaultTextStyle(
+                            style: const TextStyle(color: Colors.grey),
+                            child: Math.tex(
+                              _calculator.history,
+                              textStyle: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.grey,
+                              ),
+                              options: MathOptions(
+                                style: MathStyle.display,
+                                fontSize: 20,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
                         ),
@@ -145,110 +363,10 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
         Expanded(
           child: Column(
             children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    _buildButton(
-                      '\\sin',
-                      color: Colors.blue[700]!,
-                      onPressed: () =>
-                          setState(() => _calculator.calculateSin()),
-                    ),
-                    _buildButton(
-                      '\\cos',
-                      color: Colors.blue[700]!,
-                      onPressed: () =>
-                          setState(() => _calculator.calculateCos()),
-                    ),
-                    _buildButton(
-                      '\\tan',
-                      color: Colors.blue[700]!,
-                      onPressed: () =>
-                          setState(() => _calculator.calculateTan()),
-                    ),
-                    _buildButton(
-                      'C',
-                      color: Colors.red[700]!,
-                      onPressed: () => setState(() => _calculator.clear()),
-                    ),
-                    _buildButton(
-                      '⌫',
-                      color: Colors.orange[700]!,
-                      onPressed: () => setState(() => _calculator.backspace()),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    _buildButton(
-                      '\\arcsin',
-                      color: Colors.blue[700]!,
-                      onPressed: () =>
-                          setState(() => _calculator.calculateAsin()),
-                    ),
-                    _buildButton(
-                      '\\arccos',
-                      color: Colors.blue[700]!,
-                      onPressed: () =>
-                          setState(() => _calculator.calculateAcos()),
-                    ),
-                    _buildButton(
-                      '\\arctan',
-                      color: Colors.blue[700]!,
-                      onPressed: () =>
-                          setState(() => _calculator.calculateAtan()),
-                    ),
-                    _buildButton(
-                      '(',
-                      color: Colors.grey[700]!,
-                      onPressed: () {},
-                    ),
-                    _buildButton(
-                      ')',
-                      color: Colors.grey[700]!,
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    _buildButton(
-                      '\\log',
-                      color: Colors.blue[700]!,
-                      onPressed: () =>
-                          setState(() => _calculator.calculateLog()),
-                    ),
-                    _buildButton(
-                      '\\ln',
-                      color: Colors.blue[700]!,
-                      onPressed: () =>
-                          setState(() => _calculator.calculateLn()),
-                    ),
-                    _buildButton(
-                      'e^x',
-                      color: Colors.blue[700]!,
-                      onPressed: () =>
-                          setState(() => _calculator.calculateExp()),
-                    ),
-                    _buildButton(
-                      'x^2',
-                      color: Colors.blue[700]!,
-                      onPressed: () =>
-                          setState(() => _calculator.calculateSquare()),
-                    ),
-                    _buildButton(
-                      '\\sqrt{x}',
-                      color: Colors.blue[700]!,
-                      onPressed: () =>
-                          setState(() => _calculator.calculateSquareRoot()),
-                    ),
-                  ],
-                ),
-              ),
+              ..._showSecondPage
+                  ? _buildSecondPageButtons()
+                  : _buildFirstPageButtons(),
+              // 数字按钮区域
               Expanded(
                 child: Row(
                   children: [
@@ -266,12 +384,6 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
                       '9',
                       onPressed: () =>
                           setState(() => _calculator.addDigit('9')),
-                    ),
-                    _buildButton(
-                      '\\%',
-                      color: Colors.blue[700]!,
-                      onPressed: () =>
-                          setState(() => _calculator.calculatePercent()),
                     ),
                     _buildButton(
                       '÷',
@@ -301,12 +413,6 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
                           setState(() => _calculator.addDigit('6')),
                     ),
                     _buildButton(
-                      'n!',
-                      color: Colors.blue[700]!,
-                      onPressed: () =>
-                          setState(() => _calculator.calculateFactorial()),
-                    ),
-                    _buildButton(
                       '×',
                       color: Colors.orange[700]!,
                       onPressed: () =>
@@ -332,12 +438,6 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
                       '3',
                       onPressed: () =>
                           setState(() => _calculator.addDigit('3')),
-                    ),
-                    _buildButton(
-                      'x^y',
-                      color: Colors.blue[700]!,
-                      onPressed: () =>
-                          setState(() => _calculator.setOperator('^')),
                     ),
                     _buildButton(
                       '-',
@@ -366,16 +466,38 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
                           setState(() => _calculator.addDecimalPoint()),
                     ),
                     _buildButton(
-                      '=',
-                      color: Colors.green[700]!,
-                      onPressed: () =>
-                          setState(() => _calculator.calculateResult()),
-                    ),
-                    _buildButton(
                       '+',
                       color: Colors.orange[700]!,
                       onPressed: () =>
                           setState(() => _calculator.setOperator('+')),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  children: [
+                    _buildButton(
+                      '(',
+                      color: Colors.grey[700]!,
+                      onPressed: () {},
+                    ),
+                    _buildButton(
+                      ')',
+                      color: Colors.grey[700]!,
+                      onPressed: () {},
+                    ),
+                    _buildButton(
+                      '\\%',
+                      color: Colors.blue[700]!,
+                      onPressed: () =>
+                          setState(() => _calculator.calculatePercent()),
+                    ),
+                    _buildButton(
+                      '=',
+                      color: Colors.green[700]!,
+                      onPressed: () =>
+                          setState(() => _calculator.calculateResult()),
                     ),
                   ],
                 ),

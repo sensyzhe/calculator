@@ -84,6 +84,28 @@ class CalculatorModel {
       case '^':
         result = math.pow(num1, num2).toDouble();
         break;
+      case 'mod':
+        if (num2 != 0) {
+          result = num1 % num2;
+        } else {
+          _display = '错误';
+          _firstOperand = '';
+          _operator = '';
+          _history = '';
+          return;
+        }
+        break;
+      case 'log':
+        if (num1 > 0 && num2 > 0) {
+          result = math.log(num2) / math.log(num1);
+        } else {
+          _display = '错误';
+          _firstOperand = '';
+          _operator = '';
+          _history = '';
+          return;
+        }
+        break;
     }
 
     _history = '';
@@ -108,6 +130,12 @@ class CalculatorModel {
       case '÷':
         _history = '${_formatNumber(_firstOperand)} \\div';
         break;
+      case 'mod':
+        _history = '${_formatNumber(_firstOperand)} \\bmod';
+        break;
+      case 'log':
+        _history = '\\log_{${_formatNumber(_firstOperand)}}(?}';
+        break;
       default:
         _history = '${_formatNumber(_firstOperand)} $operator';
     }
@@ -122,7 +150,11 @@ class CalculatorModel {
               ? '\\times'
               : _operator == '÷'
                   ? '\\div'
-                  : _operator;
+                  : _operator == 'mod'
+                      ? '\\bmod'
+                      : _operator == 'log'
+                          ? '\\log_{${_firstOperand}}(${_display})'
+                          : _operator;
       _history =
           '${_formatNumber(_firstOperand)} $operator ${_formatNumber(_display)} =';
       _performOperation();
@@ -314,5 +346,38 @@ class CalculatorModel {
       return '(' + number + ')';
     }
     return number;
+  }
+
+  void addPi() {
+    _display = math.pi.toString();
+    _shouldResetDisplay = true;
+  }
+
+  void addE() {
+    _display = math.e.toString();
+    _shouldResetDisplay = true;
+  }
+
+  void calculateAbs() {
+    double number = double.parse(_display);
+    _history = '|${_formatNumber(_display)}|';
+    double result = number.abs();
+    _display = _formatResult(result);
+  }
+
+  void calculateCube() {
+    double number = double.parse(_display);
+    _history = '${_formatNumber(_display)}^3';
+    double result = number * number * number;
+    _display = _formatResult(result);
+  }
+
+  void calculateCubeRoot() {
+    double number = double.parse(_display);
+    _history = '\\sqrt[3]{${_formatNumber(_display)}}';
+    double result = number < 0
+        ? -math.pow(-number, 1 / 3).toDouble()
+        : math.pow(number, 1 / 3).toDouble();
+    _display = _formatResult(result);
   }
 }
