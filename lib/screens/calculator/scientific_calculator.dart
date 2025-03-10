@@ -166,7 +166,7 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
                   setState(() => _calculator.calculateSquareRoot()),
             ),
             _buildButton(
-              'n!',
+              '\\mathit{n}!',
               color: Colors.blue[700]!,
               onPressed: () => setState(() => _calculator.calculateFactorial()),
             ),
@@ -187,12 +187,12 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
               onPressed: () => setState(() => _calculator.addPi()),
             ),
             _buildButton(
-              'e',
+              '\\mathrm{e}',
               color: Colors.blue[700]!,
               onPressed: () => setState(() => _calculator.addE()),
             ),
             _buildButton(
-              '|x|',
+              '\\left|x\\right|',
               color: Colors.blue[700]!,
               onPressed: () => setState(() => _calculator.calculateAbs()),
             ),
@@ -312,7 +312,7 @@ class _ScientificCalculatorState extends State<ScientificCalculator> {
                             });
                           },
                           child: Text(
-                            _showSecondPage ? '1/2' : '2/2',
+                            _showSecondPage ? '2/2' : '1/2',
                             style: const TextStyle(fontSize: 16),
                           ),
                         ),
